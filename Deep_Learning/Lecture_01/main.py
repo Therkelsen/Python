@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
@@ -59,4 +58,3 @@ if __name__ == '__main__':
     plt.title('Training and validation accuracy')
     plt.show(block=False)
     plt.close()
-
