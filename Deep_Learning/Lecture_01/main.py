@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    #exercise 1
+    # exercise 1
     a = np.full((2, 3), 4)
     b = np.array([[1, 2, 3], [4, 5, 6]])
     c = np.eye(2, 3)
@@ -19,10 +19,10 @@ if __name__ == '__main__':
                   [6, 7, 8, 9, 0],
                   [0, 9, 8, 7, 6]])
 
-    print('\nsum of rows of a:\n', a.sum(axis = 1))
+    print('\nsum of rows of a:\n', a.sum(axis=1))
     print('\ntranspose of a:\n', a.transpose())
 
-    #exercise 2
+    # exercise 2
     print('data read from auto.csv')
     df = pd.read_csv('auto.csv')
     print(df.to_string())
@@ -40,10 +40,9 @@ if __name__ == '__main__':
     print('datatype of horsepower column changed to int32')
     df['horsepower'] = df['horsepower'].astype(int)
     print(df.dtypes)
-    
-    print(df[1:7].mean())
 
-    #exercise 3
+    print(df.select_dtypes(include='number').mean())
+    # exercise 3
     a = np.array([1, 1, 2, 3, 5, 8, 13, 21, 34])
     b = np.array([1, 8, 28, 56, 70, 56, 28, 8, 1])
 
@@ -53,7 +52,7 @@ if __name__ == '__main__':
     plt.plot(data[0], label='training accuracy')
     plt.plot(data[1], label='validation accuracy')
     plt.legend(loc='best')
-    plt.xlabel('epocs')
+    plt.xlabel('epochs')
     plt.ylabel('accuracy')
     plt.title('Training and validation accuracy')
     plt.show(block=False)
