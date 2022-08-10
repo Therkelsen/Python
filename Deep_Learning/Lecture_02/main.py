@@ -46,9 +46,9 @@ if __name__ == '__main__':
     print('test_data shape:', test_data.shape)
 
     model = tf.keras.Sequential()
-    model.add(layers.Dense(30, activation='relu', input_shape=(28 * 28,)))
-    model.add(layers.Dense(30, activation='relu'))
-    model.add(layers.Dense(30, activation='relu'))
+    model.add(layers.Dense(128, activation='relu', input_shape=(28 * 28,)))
+    model.add(layers.Dense(128, activation='relu'))
+    model.add(layers.Dense(128, activation='relu'))
     model.add(layers.Dense(num_classes, activation='softmax'))
 
     print('sequential dense layers added')
@@ -84,5 +84,10 @@ if __name__ == '__main__':
     plt.ylabel('Loss')
     plt.legend()
     plt.show()
+
+    model.summary()
+    score = model.evaluate(test_data, test_labels, verbose=0)
+    print('Test loss:', score[0])
+    print('Test accuracy:', score[1])
 
     # model.save('my_model.h5')
