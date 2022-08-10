@@ -41,11 +41,10 @@ if __name__ == '__main__':
     axis[1, 2].set_xlabel('year')
 
     plt.suptitle('mpg relationships')
-    plt.show()
+    plt.show(block=False)
 
     x = df[['cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'year']].astype(np.float32)
     y = df['mpg'].astype(np.float32)
-    plt.show()
     x['year'] = 1/x['year']
     x['acceleration'] = 1/x['acceleration']
 
@@ -151,5 +150,6 @@ if __name__ == '__main__':
     fig1 = sm.graphics.plot_partregress_grid(model)
     fig1.tight_layout(pad=0.75)
     fig1.show()
+    plt.show(block=True)
 
     print('\nR^2: ', model.rsquared)
