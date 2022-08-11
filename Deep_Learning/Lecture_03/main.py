@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # Y = y
     # X = sm.add_constant(X)
     # model = sm.OLS(Y, X).fit()
-    # print('\nR^2: ', model.rsquared)
+    # print(model.summary())
     #
     # # data transformation on x
     # X = np.log(x)
@@ -147,9 +147,10 @@ if __name__ == '__main__':
     print(print_model)
     print(model.params)
 
+    print('\nR^2: ', model.rsquared)
+
     fig1 = sm.graphics.plot_partregress_grid(model)
     fig1.tight_layout(pad=0.75)
     fig1.show()
     plt.show(block=True)
 
-    print('\nR^2: ', model.rsquared)
