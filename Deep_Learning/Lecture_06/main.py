@@ -4,7 +4,6 @@ from tensorflow.keras import optimizers
 from tensorflow.keras import regularizers
 from tensorflow.keras.models import load_model
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input, Dropout
 from livelossplot import PlotLossesKeras
 import tensorflow.keras.datasets as ds
 import tensorflow as tf
@@ -32,59 +31,58 @@ if __name__ == '__main__':
 
     # show the figure
     plt.show(block=False)
-    # Reshapes the data to work in a FFN
-    # train_data = train_data.reshape((60000, 28 * 28)).astype('float32')
-    train_data = train_data.reshape((60000, 28 * 28)).astype('float32')
-    train_data /= 255
-    # test_data = test_data.reshape((10000, 28 * 28)).astype('float32')
-    test_data = test_data.reshape((10000, 28 * 28)).astype('float32')
-    test_data /= 255
-
-    print('train_data: X=%s, y=%s' % (train_data.shape, train_labels.shape))
-    print('test_data: X=%s, y=%s' % (test_data.shape, test_labels.shape))
 
     num_classes = 10
-    num_epochs = 100
-    num_batches = 2 ** 10
+    num_epochs = 25
+    num_batches = 2 ** 7
+    input_shape = (28, 28, 1)
+
+    # Scale images to the [0, 1] range
+    train_data = train_data.astype("float32") / 255
+    test_data = test_data.astype("float32") / 255
+    # Make sure images have shape (28, 28, 1)
+    train_data = np.expand_dims(train_data, -1)
+    test_data = np.expand_dims(test_data, -1)
+    print("train_data shape:", train_data.shape)
+    print(train_data.shape[0], "train samples")
+    print(test_data.shape[0], "test samples")
+
     train_labels = to_categorical(train_labels, num_classes)
     test_labels = to_categorical(test_labels, num_classes)
 
-    print('data reshaped to work in a ffn')
+    print('data reshaped to work in a nn')
     print('train_data shape:', train_data.shape)
     print('test_data shape:', test_data.shape)
 
-    # regularizers.L2(l2=1e-3)
+    model = tf.keras.Sequential()
+    model.add(layers.Input(shape=input_shape))
 
-    inputs = Input(shape=(28*28,))
-    x = Dropout(0.1)(inputs)
+    model.add(layers.Conv2D(2 ** 5, kernel_size=(3, 3), activation='selu',
+                            kernel_regularizer=regularizers.L2(l2=1e-3)))
 
-    x = Dense(2 ** 8, activation='selu',
-              kernel_regularizer =regularizers.L1L2(l1=1e-4, l2=1e-3))(x)
-    x = Dropout(0.1)(x)
+    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
 
-    x = Dense(2 ** 8, activation='selu',
-              kernel_regularizer=regularizers.L1L2(l1=1e-4, l2=1e-3))(x)
-    x = Dropout(0.1)(x)
+    model.add(layers.Conv2D(2 ** 4, kernel_size=(3, 3), activation='selu',
+                            kernel_regularizer=regularizers.L2(l2=1e-3)))
 
-    x = Dense(2 ** 8, activation='selu',
-              kernel_regularizer=regularizers.L1L2(l1=1e-4, l2=1e-3))(x)
-    x = Dropout(0.1)(x)
+    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
 
-    output = Dense(10, activation='softmax')(x)
+    model.add(layers.Flatten())
 
-    model = Model(inputs, output)
+    model.add(layers.Dense(num_classes, activation='softmax'))
+
     print('layers added')
 
     # For a multi-class classification problem
-    model.compile(optimizer=optimizers.Adam(learning_rate=0.0001),
-                  loss='categorical_crossentropy',
+    model.compile(optimizer=optimizers.Adam(),
+                  loss=tf.keras.losses.CategoricalCrossentropy(),
                   metrics=['Accuracy'])
     print('model compiled')
 
     history = model.fit(x=train_data, y=train_labels,  # Input and desired outcome
                         batch_size=num_batches,  # Number of samples per gradient update. If none, it defaults to 32
                         epochs=num_epochs,  # Number of runs over the complete x and y
-                        verbose=0,  # Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.
+                        verbose=1,  # Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.
                         callbacks=[PlotLossesKeras()],  # List of functions to call during training
                         validation_split=0.0,  # Part of dataset set aside for validating
                         validation_data=(test_data, test_labels),  # Validation dataset, tuple (x_val, y_val)
