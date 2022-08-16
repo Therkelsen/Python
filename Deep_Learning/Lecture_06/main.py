@@ -3,7 +3,7 @@ from tensorflow.keras import optimizers
 from tensorflow.keras import regularizers
 from tensorflow.keras.models import load_model
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
 from tensorflow.keras.datasets import mnist, fashion_mnist
 from livelossplot import PlotLossesKeras
 import tensorflow as tf
@@ -58,19 +58,40 @@ if __name__ == '__main__':
     print('test_data shape:', test_data.shape)
 
     model = tf.keras.Sequential()
-    model.add(Conv2D(2 ** 4, kernel_size=(5, 5), activation='selu', padding="same",
-                     kernel_regularizer=regularizers.L2(l2=1e-2), input_shape=(28, 28, 1)))
+    model.add(Conv2D(2 ** 5, kernel_size=(3, 3), activation='selu', input_shape=input_shape,
+                     kernel_regularizer=regularizers.L2(l2=1e-3)))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(2 ** 5, kernel_size=(3, 3), activation='selu',
+                     kernel_regularizer=regularizers.L2(l2=1e-3)))
+    model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(2 ** 5, kernel_size=(5, 5), activation='selu', padding="same",
-                     kernel_regularizer=regularizers.L2(l2=1e-2)))
+    model.add(Dropout(0.3))
+
+    model.add(Conv2D(2 ** 6, kernel_size=(3, 3), activation='selu',
+                     kernel_regularizer=regularizers.L2(l2=1e-3)))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.3))
+
+    model.add(Conv2D(2 ** 7, kernel_size=(3, 3), activation='selu',
+                     kernel_regularizer=regularizers.L2(l2=1e-3)))
+    model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(2 ** 5, kernel_size=(5, 5), activation='selu', padding="same",
-                     kernel_regularizer=regularizers.L2(l2=1e-2)))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.3))
+
     model.add(Flatten())
-    model.add(Dropout(0.5))
-    model.add(Dense(2 ** 6, activation='selu',
-              kernel_regularizer=regularizers.L2(l2=1e-4)))
+
+    model.add(Dense(2 ** 9, activation='selu',
+                    kernel_regularizer=regularizers.L2(l2=1e-3)))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.3))
+
+    model.add(Dense(2 ** 7, activation='selu',
+                    kernel_regularizer=regularizers.L2(l2=1e-3)))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.3))
+
     model.add(Dense(10, activation='softmax'))
     print('layers added')
 
