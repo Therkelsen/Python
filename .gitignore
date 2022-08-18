@@ -1,7 +1,4 @@
 .venv
 .vscode
-C:/Users/Thomas Therkelsen/Documents/GitHub/Python/Deep_Learning/Pneumonia_Diagnosing/data
-C:/Users/Thomas Therkelsen/Documents/GitHub/Python/Deep_Learning/Pneumonia_Diagnosing/dataset
-C:/Users/Thomas Therkelsen/Documents/GitHub/Python/Deep_Learning/Pneumonia_Diagnosing/data.zip
 *.jpg
 *.zip
