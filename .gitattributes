@@ -1,2 +1,4 @@
 .venv/* linguist-vendored
 .vscode/* linguist-vendored
+
+*.ipynb linguist-language=Python
